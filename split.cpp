@@ -10,6 +10,7 @@ split.h.  **Do NOT add main() to this file**.  When you submit
 the function below should be the only one in this file.
 */
 
+#include <iostream>
 #include "split.h"
 
 /* Add a prototype for a helper function here if you need */
@@ -26,46 +27,65 @@ void split(Node*& in, Node*& odds, Node*& evens)
     return;
   }
 
-  bool evenFlag = false;
-
+  //Value is odd
   if (in->value % 2) {
-    odds->next = in;
+    odds = in;
   } //Value is even
   else {
-    evens->next = in;
-    evenFlag = true;
+    evens = in;
   }
+
+  //Last node in the list
+  if (in->next == nullptr) {
+    in = nullptr;
+    return;
+  }
+
+  splitHelper(in->next, odds, evens);
 
   //Original list is not preserved
   in = nullptr;
-
-  //Last node in the list
-  if (in->next == nullptr) {
-    return;
-  }
-
-  return splitHelper(in->next, evenFlag ? odds : odds->next, evenFlag ? evens->next : evens);
 }
 
 void splitHelper(Node*& in, Node*& odds, Node*& evens) {
-  bool evenFlag = false;
+  bool evenFlag = true;
+  bool oddFlag = true;
 
   //Value is odd
   if (in->value % 2) {
-    odds->next = in;
+    if (odds == nullptr) {
+      odds = in;
+    }
+    else {
+      odds->next = in;
+      oddFlag = false;
+    }
   } //Value is even
   else {
-    evens->next = in;
-    evenFlag = true;
+    if (evens == nullptr) {
+      evens = in;
+    }
+    else {
+      evens->next = in;
+      evenFlag = false;
+    }
   }
 
   //Last node in the list
   if (in->next == nullptr) {
+    if (evenFlag && evens != nullptr) {
+      evens->next = nullptr;
+    }
+
+    if (oddFlag && odds != nullptr) {
+      odds->next = nullptr;
+    }
+
     return;
   }
 
-  //Makes sure the list that was added to advances down the chain
-  return splitHelper(in->next, evenFlag ? odds : odds->next, evenFlag ? evens->next : evens);
+  //Ensures first addition does not mess up later addition
+  splitHelper(in->next, oddFlag ? odds : odds->next, evenFlag ? evens : evens->next);
 }
 
 /* If you needed a helper function, write it here */
