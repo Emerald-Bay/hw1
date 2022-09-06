@@ -79,16 +79,47 @@ void ULListStr::pop_back() {
   if(ULListStr::empty()) {
     return;
   }
-  else if(tail_->last != 1) {
-    tail_->last--;
+  else {
+    if(tail_->last != 1) {
+      tail_->last--;
+    }
+    else {
+      Item* temp;
+      temp = tail_->prev;
+      delete tail_;
+      tail_ = temp;
+      tail_->next = nullptr;
+    }
+
+    size_--;
+  }
+}
+void ULListStr::pop_front() {
+  if(ULListStr::empty()) {
+    return;
   }
   else {
-    Item* temp;
-    temp = tail_->prev;
-    delete tail_;
-    tail_ = temp;
-    tail_->next = nullptr;
+    if(head_->first != 0) {
+      head_->first++;
+    }
+    else {
+      Item* temp;
+      temp = head_->next;
+      delete head_;
+      head_ = temp;
+      head_->prev = nullptr;
+    }
+
+    size_--;
   }
+}
+
+std::string const & ULListStr::front() const {
+  return (head_->val[head_->first]);
+}
+
+std::string const & ULListStr::back() const {
+  return (tail_->val[tail_->last - 1]);
 }
 
 void ULListStr::set(size_t loc, const std::string& val)
@@ -127,4 +158,10 @@ void ULListStr::clear()
   }
   tail_ = NULL;
   size_ = 0;
+}
+
+std::string* ULListStr::getValAtLoc(size_t loc) const {
+  while (true) {
+    
+  }
 }
