@@ -26,14 +26,14 @@ size_t ULListStr::size() const
 
 // WRITE YOUR CODE HERE
 void ULListStr::push_back(const std::string& val) {
-  if (ULListStr::empty()) {
+  if (empty()) {
     head_ = tail_ = new Item;
 
-    tail_->first = 4;
-    tail_->last = 5;
-    tail_->val[4] = val;
+    tail_->first = ARRSIZE / 2 - 1;
+    tail_->last = ARRSIZE / 2;
+    tail_->val[tail_->first] = val;
   }
-  else if(tail_->last != 10) {
+  else if(tail_->last != ARRSIZE) {
     tail_->val[tail_->last++] = val;
   }
   else {
@@ -51,12 +51,12 @@ void ULListStr::push_back(const std::string& val) {
 }
 
 void ULListStr::push_front(const std::string& val) {
-  if (ULListStr::empty()) {
+  if (empty()) {
     head_ = tail_ = new Item;
 
-    head_->first = 4;
-    head_->last = 5;
-    head_->val[4] = val;
+    head_->first = ARRSIZE / 2 - 1;
+    head_->last = ARRSIZE / 2;
+    head_->val[head_->first] = val;
   }
   else if(head_->first != 0) {
     head_->val[--head_->first] = val;
@@ -67,16 +67,16 @@ void ULListStr::push_front(const std::string& val) {
     temp->prev = head_;
     head_->next = temp;
 
-    tail_->first = 9;
-    tail_->last = 10;
-    tail_->val[9] = val;
+    tail_->first = ARRSIZE - 1;
+    tail_->last = ARRSIZE;
+    tail_->val[ARRSIZE - 1] = val;
   }
 
   size_++;
 }
 
 void ULListStr::pop_back() {
-  if(ULListStr::empty()) {
+  if(empty()) {
     return;
   }
   else {
@@ -95,7 +95,7 @@ void ULListStr::pop_back() {
   }
 }
 void ULListStr::pop_front() {
-  if(ULListStr::empty()) {
+  if(empty()) {
     return;
   }
   else {
@@ -161,7 +161,21 @@ void ULListStr::clear()
 }
 
 std::string* ULListStr::getValAtLoc(size_t loc) const {
-  while (true) {
-    
+  if (loc > size_) {
+    return nullptr;
+  }
+  
+  Item* buffer = head_;
+  
+  while (buffer != nullptr) {
+    size_t distance = buffer->last - buffer->first;
+
+    if (distance <= loc) {
+      loc -= distance;
+      buffer = buffer->next;
+    }
+    else {
+      return &(buffer->val[buffer->first - loc]);
+    }
   }
 }
